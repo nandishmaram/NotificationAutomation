@@ -1,0 +1,10 @@
+target/
+.idea/
+*.iml
+screenshots/
+reports/
+tokens/
+test-output/
+src/test/resources/credentials.json
+testdata/~$*
+   .DS_Store
