@@ -8,3 +8,4 @@ test-output/
 src/test/resources/credentials.json
 testdata/~$*
    .DS_Store
+.DS_Store
