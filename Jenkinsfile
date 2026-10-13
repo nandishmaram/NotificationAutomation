@@ -15,7 +15,7 @@ pipeline {
 
     // Runs automatically on weekdays around 9 AM
     triggers {
-        cron('H 9 * * 1-5')
+        cron('0 11 * * 1-5')
     }
 
     environment {
