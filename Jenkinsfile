@@ -1,11 +1,10 @@
-// Runs the notification tests in Jenkins.
-//
-// Needs (set up once in Jenkins):
-//   Tools:        a Maven installation named "Maven"
-//   Credentials:  untangled-password       (Secret text) - app login password
-//                 report-email-password    (Secret text) - Gmail app password for sending the report
-//                 gmail-credentials-json   (Secret file) - credentials.json
-//                 gmail-stored-credential  (Secret file) - tokens/StoredCredential from your Mac
+// Jenkins setup needed (one time):
+//   Manage Jenkins -> Tools: Maven installation named "Maven"
+//   Manage Jenkins -> Credentials:
+//     untangled-password      (Secret text)
+//     report-email-password   (Secret text)
+//     gmail-credentials-json  (Secret file: credentials.json)
+//     gmail-stored-credential (Secret file: tokens/StoredCredential)
 
 pipeline {
     agent any
@@ -14,8 +13,8 @@ pipeline {
         maven 'Maven'
     }
 
+    // Runs automatically on weekdays around 9 AM
     triggers {
-        // Weekdays, around 9 AM (Jenkins picks the exact minute)
         cron('H 9 * * 1-5')
     }
 
@@ -25,7 +24,6 @@ pipeline {
     }
 
     stages {
-
         stage('Get code') {
             steps {
                 checkout scm
@@ -56,11 +54,8 @@ pipeline {
 
     post {
         always {
-            // Keep the reports, screenshots and Excel results with each build
             archiveArtifacts artifacts: 'reports/**, screenshots/**, testdata/*.xlsx', allowEmptyArchive: true
-
-            // Remove the Gmail login files from the workspace
             sh 'rm -f src/test/resources/credentials.json tokens/StoredCredential'
         }
     }
-}mvn clean test -Dbrowser.headless=true
+}
