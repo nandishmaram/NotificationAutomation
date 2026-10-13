@@ -25,7 +25,7 @@ public class ConfigReader {
     }
 
     public static String get(String key) {
-        String value = properties.getProperty(key);
+        String value = System.getProperty(key, properties.getProperty(key));
         if (value == null || value.isBlank()) {
             throw new RuntimeException("Missing value in config.properties: " + key);
         }
