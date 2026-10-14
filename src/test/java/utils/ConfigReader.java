@@ -33,15 +33,18 @@ public class ConfigReader {
     }
 
     public static int getInt(String key) {
+
         return Integer.parseInt(get(key));
     }
 
     public static boolean getBoolean(String key) {
+
         return Boolean.parseBoolean(get(key));
     }
 
     // Full URL from base.url + a path, e.g. getUrl("login.path")
     public static String getUrl(String pathKey) {
+
         return get("base.url") + get(pathKey);
     }
 

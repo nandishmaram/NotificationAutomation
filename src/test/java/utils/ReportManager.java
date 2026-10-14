@@ -57,7 +57,8 @@ public class ReportManager {
         }
     }
 
-    public static String getReportPath() {
+    public static String getReportPath()
+    {
         return reportPath;
     }
 

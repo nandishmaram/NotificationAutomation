@@ -39,7 +39,11 @@ public class NotificationTest extends BaseTest {
     }
 
     @Test(dataProvider = "notificationData", dependsOnMethods = "verifyLogin")
-    public void verifyNotificationEmails(NotificationData data) {
+    public void verifyNotificationEmails(NotificationData data)
+    {
+
+        SoftAssert softAssert = new SoftAssert();
+
         steps.startTestCase(data);
 
         // Steps 1-4: fill and submit the form
@@ -48,12 +52,13 @@ public class NotificationTest extends BaseTest {
         steps.fillForm(data);
         long submitTime = steps.submitForm(data);
 
-        Assert.assertTrue(steps.isFormSaved(), "Form was not saved: " + steps.getPopupMessage());
+        softAssert.assertTrue(steps.isFormSaved(),
+                "Form was not saved: " + steps.getPopupMessage());
 
         // Step 5: read the notification emails
         List<String> emails = steps.waitForEmails(data, submitTime);
 
-        // Step 6: actual results
+        // Step 6: check the results
         int actualEmailCount = emails.size();
         boolean alwaysReceived = steps.isEmailReceived(emails, data.getAlwaysSubject());
         boolean conditionReceived = steps.isEmailReceived(emails, data.getConditionSubject());
@@ -61,12 +66,11 @@ public class NotificationTest extends BaseTest {
 
         steps.recordResults(data, actualEmailCount, alwaysReceived, conditionReceived, advanceReceived);
 
-        // Validate: actual vs expected (all four are checked, then any failures are reported together)
-        SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(actualEmailCount, data.getExpectedEmailCount(), "Email count");
         softAssert.assertEquals(alwaysReceived, data.isAlwaysExpected(), "Always email");
         softAssert.assertEquals(conditionReceived, data.isConditionExpected(), "Condition email");
         softAssert.assertEquals(advanceReceived, data.isAdvanceExpected(), "Advance email");
+
         softAssert.assertAll();
     }
 

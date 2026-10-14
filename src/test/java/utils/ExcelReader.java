@@ -6,9 +6,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -38,8 +41,11 @@ public class ExcelReader {
     private static final int ALWAYS_SUBJECT = 18;
     private static final int CONDITION_SUBJECT = 19;
     private static final int ADVANCE_SUBJECT = 20;
+    private static final int LAST_RUN = 21;
 
     private static final DataFormatter formatter = new DataFormatter();
+    private static final DateTimeFormatter LAST_RUN_FORMAT =
+            DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a", Locale.ENGLISH);
 
 
     // ========== READ ==========
@@ -132,9 +138,12 @@ public class ExcelReader {
     }
 
     // Writes PASS or FAIL for one test case (decided by the test's assertions)
+    // and the date and time it ran, e.g. "14 Oct 2026, 11:02 AM"
     public static void saveStatus(String testId, String status) {
         try (Workbook workbook = openWorkbook()) {
-            setCell(findRow(workbook, testId), STATUS, status);
+            Row row = findRow(workbook, testId);
+            setCell(row, STATUS, status);
+            setCell(row, LAST_RUN, LocalDateTime.now().format(LAST_RUN_FORMAT));
             saveWorkbook(workbook);
         } catch (Exception e) {
             System.out.println("Could not save status for " + testId + " in Excel: " + e.getMessage());
