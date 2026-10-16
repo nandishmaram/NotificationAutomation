@@ -108,7 +108,9 @@ public class RunSummary {
 
     // ========== FOR THE EMAIL ==========
 
-    public static List<TestCase> getTestCases() {
+    public static List<TestCase> getTestCases()
+    {
+
         return testCases;
     }
 
